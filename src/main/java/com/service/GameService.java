@@ -2,6 +2,7 @@ package com.service;
 
 import com.entity.Game;
 import com.repository.GameRepo;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class GameService {
             return new ArrayList<>();
         }
         List<Game> result = new ArrayList<>();
-        List<Game> allGames = new ArrayList<>();
+        List<Game> allGames;
         allGames = gameRepo.findAll();
         for (Game game : allGames) {
             if (new HashSet<>(game.getCategories()).containsAll(categories))
@@ -43,7 +44,7 @@ public class GameService {
     public List<String> getCategories(Long id) {
         if (gameRepo.findById(id).isPresent())
             return gameRepo.findById(id).get().getCategories();
-        return new ArrayList<String>();
+        return new ArrayList<>();
     }
 
     public List<Game> getGamesByCount(int min, int max) {
@@ -59,4 +60,29 @@ public class GameService {
     }
 
 
+    public boolean updateGame(long id, Game game) {
+        if (gameRepo.findById(id).isPresent()) {
+            Game currentGame = gameRepo.findById(id).get();
+            currentGame.setName(game.getName());
+            currentGame.setDescription(game.getDescription());
+            currentGame.setCategories(game.getCategories());
+            currentGame.setMinPlayers(game.getMinPlayers());
+            currentGame.setMaxPlayers(game.getMaxPlayers());
+            gameRepo.save(currentGame);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean deleteGame(long id) {
+        if (gameRepo.findById(id).isPresent()) {
+            gameRepo.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    public void deleteAll() {
+        gameRepo.deleteAll();
+    }
 }

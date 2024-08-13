@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Board Games</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-image: url('/board_games.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.5);
+            z-index: -1;
+        }
+
+        .card {
+            background-color: rgba(219, 203, 202);
+            border: 2px solid brown;
+            border-radius: 10px;
+        }
+
+        h1 {
+            color: black;
+            font-size: 80px;
+            max-width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            text-shadow: 2px 0 #fff, -2px 0 #fff, 0 2px #fff, 0 -2px #fff,
+            1px 1px #fff, -1px -1px #fff, 1px -1px #fff, -1px 1px #fff;
+        }
+    </style>
+</head>
+<body>
+<div class="album py-5">
+    <h1>Games</h1>
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            <div th:each="game : ${games}" class="col">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${game.name}">Game Title</h5>
+                        <p class="card-text" th:text="${game.description}">Game description</p>
+                        <p class="card-text">Genre: <span th:text="${game.categories}"></span></p>
+                        <p class="card-text">Players: <span th:text="${game.minPlayers + '-' + game.maxPlayers}"></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

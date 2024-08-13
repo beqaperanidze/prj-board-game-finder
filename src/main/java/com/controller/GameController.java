@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/games") // Base path for all endpoints in this controller
+@RequestMapping("/games")
 public class GameController {
     private final GameService gameService;
 
@@ -62,4 +62,25 @@ public class GameController {
         List<Game> savedGames = gameService.addMultipleGames(games);
         return new ResponseEntity<>(savedGames, HttpStatus.CREATED);
     }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Game> updateGame(@PathVariable("id") long id, @RequestBody Game game) {
+        boolean updated = gameService.updateGame(id, game);
+        if (updated) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Game> deleteGame(@PathVariable("id") long id) {
+        boolean deleted = gameService.deleteGame(id);
+        if (deleted) return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("/deleteAll")
+    public ResponseEntity<Game> deleteAll() {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

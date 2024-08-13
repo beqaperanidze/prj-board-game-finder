@@ -20,6 +20,7 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private String description;
     private int minPlayers;
     private int maxPlayers;
     @ElementCollection(fetch = FetchType.EAGER)
