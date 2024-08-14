@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Perfect Game</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: #a0a0a0;
+            font-family: Arial, sans-serif;
+            background-image: url('/river.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+
+        .container {
+            background-color: rgba(43, 43, 43, 0.8);
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 50px;
+        }
+
+        h1 {
+            color: #d0d0d0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-control, .select2-container--default .select2-selection--multiple {
+            background-color: #ffffff;
+            border: 1px solid #ffffff;
+            color: #000000;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: #ffffff;
+            border: 1px solid #ffffff;
+        }
+
+        .select2-container--default .select2-results__option[aria-selected=true] {
+            background-color: #ffffff;
+        }
+
+        .select2-container--default .select2-results__option--highlighted[aria-selected] {
+            background-color: #0d6efd;
+        }
+
+        .select2-dropdown {
+            background-color: #ffffff;
+            border: 1px solid #ffffff;
+        }
+
+        .select2-search__field {
+            background-color: #ffffff;
+            color: #ffffff;
+        }
+
+        .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Find Your Perfect Game</h1>
+    <form action="/find_your_game" method="get">
+        <div class="mb-3">
+            <label for="categories" class="form-label">Select Categories:</label>
+            <select class="form-select" id="categories" name="categories[]" multiple="multiple" style="width: 100%;">
+
+                <option value="">Select categories</option>
+                <option value="Abstract">Abstract</option>
+                <option value="Adventure">Adventure</option>
+                <option value="Agriculture">Agriculture</option>
+                <option value="Ancient">Ancient</option>
+                <option value="App-Driven">App-Driven</option>
+                <option value="Area Control">Area Control</option>
+                <option value="Asymmetric">Asymmetric</option>
+                <option value="Bag Building">Bag Building</option>
+                <option value="Betting">Betting</option>
+                <option value="Bluffing">Bluffing</option>
+                <option value="Campaign">Campaign</option>
+                <option value="Card Drafting">Card Drafting</option>
+                <option value="Card Game">Card Game</option>
+                <option value="City Building">City Building</option>
+                <option value="Civilization">Civilization</option>
+                <option value="Classic">Classic</option>
+                <option value="Cooperative">Cooperative</option>
+                <option value="Crime">Crime</option>
+                <option value="Deck Building">Deck Building</option>
+                <option value="Deduction">Deduction</option>
+                <option value="Dice">Dice</option>
+                <option value="Dice Rolling">Dice Rolling</option>
+                <option value="Drafting">Drafting</option>
+                <option value="Economic">Economic</option>
+                <option value="Engine Building">Engine Building</option>
+                <option value="Epic">Epic</option>
+                <option value="Expansion">Expansion</option>
+                <option value="Exploration">Exploration</option>
+                <option value="Family">Family</option>
+                <option value="Fantasy">Fantasy</option>
+                <option value="Farming">Farming</option>
+                <option value="Historical">Historical</option>
+                <option value="History">History</option>
+                <option value="Horror">Horror</option>
+                <option value="Humor">Humor</option>
+                <option value="Kaiju">Kaiju</option>
+                <option value="Legacy">Legacy</option>
+                <option value="Map">Map</option>
+                <option value="Martial Arts">Martial Arts</option>
+                <option value="Maze">Maze</option>
+                <option value="Medical">Medical</option>
+                <option value="Miniatures">Miniatures</option>
+                <option value="Mystery">Mystery</option>
+                <option value="Mythology">Mythology</option>
+                <option value="Narrative">Narrative</option>
+                <option value="Nature">Nature</option>
+                <option value="Negotiation">Negotiation</option>
+                <option value="Network Building">Network Building</option>
+                <option value="Numbers">Numbers</option>
+                <option value="Party">Party</option>
+                <option value="Push Your Luck">Push Your Luck</option>
+                <option value="Puzzle">Puzzle</option>
+                <option value="Real-Time">Real-Time</option>
+                <option value="Resource Management">Resource Management</option>
+                <option value="Role Selection">Role Selection</option>
+                <option value="Route Building">Route Building</option>
+                <option value="Sci-Fi">Sci-Fi</option>
+                <option value="Science Fiction">Science Fiction</option>
+                <option value="Set Collection">Set Collection</option>
+                <option value="Skirmish">Skirmish</option>
+                <option value="Social Deduction">Social Deduction</option>
+                <option value="Space">Space</option>
+                <option value="Space Exploration">Space Exploration</option>
+                <option value="Storytelling">Storytelling</option>
+                <option value="Strategy">Strategy</option>
+            </select>
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <label for="min" class="form-label">Minimum Players:</label>
+                <input type="number" class="form-control" id="min" name="min" value="1">
+            </div>
+            <div class="col">
+                <label for="max" class="form-label">Maximum Players:</label>
+                <input type="number" class="form-control" id="max" name="max" value="10">
+            </div>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Search Games</button>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#categories').select2({
+            placeholder: "Select categories",
+            allowClear: true,
+            theme: "classic"
+        });
+    });
+</script>
+</body>
+</html>

@@ -33,17 +33,18 @@ public class GameController {
         }
     }
 
+    @GetMapping("/getCategories/{id}")
+    public ResponseEntity<List<String>> getCategories(@PathVariable("id") Long id) {
+        List<String> categories = gameService.getCategories(id);
+        return ResponseEntity.ok(categories);
+    }
+
     @GetMapping("/categories")
     public ResponseEntity<List<Game>> getGamesByCategories(@RequestParam List<String> categories) {
         List<Game> games = gameService.getGamesByCategories(categories);
         return ResponseEntity.ok(games);
     }
 
-    @GetMapping("/getCategories/{id}")
-    public ResponseEntity<List<String>> getCategories(@PathVariable("id") Long id) {
-        List<String> categories = gameService.getCategories(id);
-        return ResponseEntity.ok(categories);
-    }
 
     @GetMapping("/count")
     public ResponseEntity<List<Game>> getGamesByCount(@RequestParam int min, @RequestParam int max) {
@@ -80,6 +81,7 @@ public class GameController {
 
     @DeleteMapping("/deleteAll")
     public ResponseEntity<Game> deleteAll() {
+        gameService.deleteAll();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
