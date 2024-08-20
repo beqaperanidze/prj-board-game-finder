@@ -1,68 +1,45 @@
 package com.controller;
 
-import com.entity.Game;
+import com.entity.User;
 import com.service.GameService;
-import lombok.extern.slf4j.Slf4j;
+import com.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
-@RequestMapping("/")
-@Slf4j
 
+@RestController
+@RequestMapping("/user")
 public class UserController {
+    private final UserService userService;
 
-    private final GameService gameService;
-
-    public UserController(GameService gameService) {
-        this.gameService = gameService;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @GetMapping("greeting")
-    public String greeting(Model model) {
-        return "greeting";
+    @GetMapping("/getAll")
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/allGames")
-    public String allGames(Model model) {
-        List<Game> games = gameService.getAllGames();
-        model.addAttribute("games", games);
-        return "allOfTheGames";
+    @GetMapping("/getUser/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
+        User user = userService.getUserById(id);
+        return ResponseEntity.ok(user);
     }
 
-    @GetMapping("/search")
-    public String search(Model model) {
-        return "search";
+    @PostMapping("/addUser")
+    public ResponseEntity<User> addUser(@RequestBody User user) {
+        User addedUser = userService.addUser(user);
+        return new ResponseEntity<>(addedUser, HttpStatus.CREATED);
     }
 
-
-    @GetMapping("/find_your_game")
-    public String filteredGames(@RequestParam(required = false) List<String> categories,
-                                @RequestParam(required = false) int min,
-                                @RequestParam(required = false) int max,
-                                Model model) {
-        List<Game> games = gameService.getGamesByCategoriesAndCount(categories, min, max);
-        model.addAttribute("games", games);
-        return "allOfTheGames";
-    }
-
-
-    @GetMapping("/categories")
-    public ResponseEntity<List<Game>> getGamesByCategories(@RequestParam List<String> categories) {
-        List<Game> games = gameService.getGamesByCategories(categories);
-        return ResponseEntity.ok(games);
-    }
-
-
-    @GetMapping("/count")
-    public ResponseEntity<List<Game>> getGamesByCount(@RequestParam int min, @RequestParam int max) {
-        List<Game> games = gameService.getGamesByCount(min, max);
-        return ResponseEntity.ok(games);
+    @PostMapping("/addMultipleUsers")
+    public ResponseEntity<List<User>> addMultipleUsers(@RequestBody List<User> users) {
+        List<User> addedUsers = userService.addMultipleUsers(users);
+        return new ResponseEntity<>(addedUsers, HttpStatus.CREATED);
     }
 }
