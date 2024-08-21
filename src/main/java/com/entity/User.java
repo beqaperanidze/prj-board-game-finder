@@ -22,7 +22,7 @@ public class User {
     private String lastName;
     private String email;
     private String password;
-
+    private Role role;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_favourites",

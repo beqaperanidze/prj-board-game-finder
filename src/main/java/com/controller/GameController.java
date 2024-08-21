@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.exception.GameNotFoundException;
 import com.entity.Game;
 import com.service.GameService;
 import org.springframework.http.HttpStatus;
@@ -7,9 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/games")
+@RequestMapping("/api/games")
 public class GameController {
     private final GameService gameService;
 
@@ -25,12 +27,9 @@ public class GameController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Game> getGameById(@PathVariable("id") Long id) {
-        Game game = (Game) gameService.getGameById(id);
-        if (game != null) {
-            return ResponseEntity.ok(game);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+        Optional<Game> game = gameService.getGameById(id);
+        return game.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
     @GetMapping("/getCategories/{id}")
@@ -44,7 +43,6 @@ public class GameController {
         List<Game> games = gameService.getGamesByCategories(categories);
         return ResponseEntity.ok(games);
     }
-
 
     @GetMapping("/count")
     public ResponseEntity<List<Game>> getGamesByCount(@RequestParam int min, @RequestParam int max) {
@@ -65,24 +63,20 @@ public class GameController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Game> updateGame(@PathVariable("id") long id, @RequestBody Game game) {
-        boolean updated = gameService.updateGame(id, game);
-        if (updated) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<Void> updateGame(@PathVariable("id") long id, @RequestBody Game game) throws GameNotFoundException {
+        gameService.updateGame(id, game);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Game> deleteGame(@PathVariable("id") long id) {
-        boolean deleted = gameService.deleteGame(id);
-        if (deleted) return new ResponseEntity<>(HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<Void> deleteGame(@PathVariable("id") long id) throws GameNotFoundException {
+        gameService.deleteGame(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/deleteAll")
-    public ResponseEntity<Game> deleteAll() {
+    public ResponseEntity<Void> deleteAll() {
         gameService.deleteAll();
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }

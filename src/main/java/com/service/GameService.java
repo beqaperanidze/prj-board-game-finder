@@ -1,5 +1,6 @@
 package com.service;
 
+import com.exception.GameNotFoundException;
 import com.entity.Game;
 import com.repository.GameRepo;
 import org.springframework.stereotype.Service;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GameService {
@@ -16,21 +18,16 @@ public class GameService {
         this.gameRepo = gameRepo;
     }
 
-
     public List<Game> getAllGames() {
         return gameRepo.findAll();
     }
 
-
-    public Object getGameById(Long id) {
+    public Optional<Game> getGameById(Long id) {
         return gameRepo.findById(id);
     }
 
-
     public List<String> getCategories(Long id) {
-        if (gameRepo.findById(id).isPresent())
-            return gameRepo.findById(id).get().getCategories();
-        return new ArrayList<>();
+        return gameRepo.findById(id).map(Game::getCategories).orElseGet(ArrayList::new);
     }
 
     public List<Game> getGamesByCategories(List<String> categories) {
@@ -38,11 +35,12 @@ public class GameService {
             return new ArrayList<>();
         }
         List<Game> result = new ArrayList<>();
-        List<Game> allGames;
-        allGames = gameRepo.findAll();
+        List<Game> allGames = gameRepo.findAll();
+
         for (Game game : allGames) {
-            if (new HashSet<>(game.getCategories()).containsAll(categories))
+            if (new HashSet<>(game.getCategories()).containsAll(categories)) {
                 result.add(game);
+            }
         }
         return result;
     }
@@ -53,18 +51,15 @@ public class GameService {
 
     public List<Game> getGamesByCategoriesAndCount(List<String> categories, int min, int max) {
         List<Game> gamesByCat = getGamesByCategories(categories);
-        System.out.println(gamesByCat);
         List<Game> result = new ArrayList<>();
+
         for (Game game : gamesByCat) {
             if (game.getMinPlayers() <= min && game.getMaxPlayers() >= max) {
-
                 result.add(game);
             }
         }
-
         return result;
     }
-
 
     public Game addGame(Game game) {
         return gameRepo.save(game);
@@ -74,27 +69,28 @@ public class GameService {
         return gameRepo.saveAll(games);
     }
 
-
-    public boolean updateGame(long id, Game game) {
-        if (gameRepo.findById(id).isPresent()) {
-            Game currentGame = gameRepo.findById(id).get();
+    public void updateGame(long id, Game game) throws GameNotFoundException {
+        Optional<Game> optionalGame = gameRepo.findById(id);
+        if (optionalGame.isPresent()) {
+            Game currentGame = optionalGame.get();
             currentGame.setName(game.getName());
             currentGame.setDescription(game.getDescription());
             currentGame.setCategories(game.getCategories());
             currentGame.setMinPlayers(game.getMinPlayers());
             currentGame.setMaxPlayers(game.getMaxPlayers());
             gameRepo.save(currentGame);
-            return true;
+            return;
         }
-        return false;
+        throw new GameNotFoundException("Game with ID: " + id + "not found.");
     }
 
-    public boolean deleteGame(long id) {
-        if (gameRepo.findById(id).isPresent()) {
+    public void deleteGame(long id) throws GameNotFoundException {
+        Optional<Game> currGame = gameRepo.findById(id);
+        if (currGame.isEmpty()) {
+            throw new GameNotFoundException("Game with ID: " + id + "not found.");
+        } else {
             gameRepo.deleteById(id);
-            return true;
         }
-        return false;
     }
 
     public void deleteAll() {
